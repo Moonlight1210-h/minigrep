@@ -40,7 +40,7 @@ impl Config {
 
 fn run(config: Config) -> Result<(), Box<dyn Error>> {
     let contents =
-        fs::read_to_string(config.file_path).expect("should be able to read the fucking file");
+        fs::read_to_string(config.file_path).expect("should be able to read the file");
     let result = if config.ignore_case {
         search_case_insensitive(&config.query, &contents)
     } else {
