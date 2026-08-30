@@ -1,3 +1,18 @@
+use clap::parser;
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Config{
+    /// name of the file to search
+    #[arg(short,long)]
+    query : String,
+    /// the path of the file
+    #[arg(short,long)]
+    file_path : String,
+    
+}
+
+
+
 pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
     let mut result = Vec::new();
     for line in contents.lines() {
