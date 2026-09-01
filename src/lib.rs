@@ -24,4 +24,6 @@ fn get_args() -> MyResult<Config> {
 }
 
 /// The core logic fun
-pub fn run()
+pub fn run(config: Config) -> MyResult<()> {
+    todo!();
+}
