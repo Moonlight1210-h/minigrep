@@ -2,6 +2,12 @@
 name = "minigrep"
 version = "0.1.1"
 edition = "2024"
+authors = ["Moonlight <qwex1210@gmail.com>"]
+description = "A minimal grep-like CLI tool written in Rust."
+repository = "https://github.com/Moonlight1210-h/minigrep"
+license = "MIT"
+keywords = ["grep", "cli", "search", "rust"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.6.6", features = ["derive"] }
