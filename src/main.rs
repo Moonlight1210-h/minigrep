@@ -1,4 +1,4 @@
-use minigrep::search_case_insensitive;
+use minigrep::{search, search_case_insensitive};
 use std::env;
 use std::error::Error;
 use std::fs;
@@ -39,12 +39,11 @@ impl Config {
 }
 
 fn run(config: Config) -> Result<(), Box<dyn Error>> {
-    let contents =
-        fs::read_to_string(config.file_path).expect("should be able to read the file");
+    let contents = fs::read_to_string(config.file_path).expect("should be able to read the file");
     let result = if config.ignore_case {
         search_case_insensitive(&config.query, &contents)
     } else {
-        search_case_insensitive(&config.query, &contents)
+        search(&config.query, &contents)
     };
     for line in result {
         println!("{line}");
