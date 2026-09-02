@@ -1,4 +1,5 @@
 use clap::Parser;
+use colored::Colorize;
 use std::error::Error;
 use std::fs;
 pub type MyResult<T> = Result<T, Box<dyn Error>>;
@@ -18,8 +19,8 @@ pub struct Config {
     pub ignore_case: bool,
 
     /// Show_line_numbers
-    #[arg(short = 'n' , long = "line_number")]
-   pub show_line_number : bool
+    #[arg(short = 'n', long = "line_number")]
+    pub show_line_number: bool,
 }
 
 pub fn get_args() -> MyResult<Config> {
@@ -27,29 +28,25 @@ pub fn get_args() -> MyResult<Config> {
 }
 
 pub fn run(config: Config) -> MyResult<()> {
-    let mut results: Vec<String> = Vec::new();
-    let content = fs::read_to_string(&config.file_path)?;
-    for line in content.lines() {
-        if config.ignore_case  {
-            if line.to_lowercase().contains(&config.query.to_lowercase()) {
-                results.push(line.to_string());
-            }
+    //let mut result: Vec<String> = Vec::new();
+    let expected_messege = "no such a file".red().bold().to_string();
+    let content = fs::read_to_string(config.file_path).expect(&expected_messege);
+    for (index_line, line) in content.lines().enumerate() {
+        let is_match = if config.ignore_case {
+            line.to_lowercase().contains(&config.query.to_lowercase())
         } else {
-            if line.contains(&config.query) {
-                results.push(line.to_string());
+            line.contains(&config.query)
+        };
+        if is_match {
+            let line_number = index_line + 1;
+            let formated_line =
+                line.replace(&config.query, &config.query.blue().bold().to_string());
+            if config.show_line_number {
+                println!("{}.{}", line_number, formated_line);
+            } else {
+                println!("{}", formated_line);
             }
         }
     }
-     if config.show_line_number {
-        for (line_num,line) in results.iter().enumerate(){
-            println!("{}. {}",line_num+1 ,line)
-        } 
-     }
-     else {   for line in results {
-        
-        println!("{}", line);
-    }}
- 
     Ok(())
 }
- 
