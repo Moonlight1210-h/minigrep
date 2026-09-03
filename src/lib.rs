@@ -28,19 +28,20 @@ pub fn get_args() -> MyResult<Config> {
 }
 
 pub fn run(config: Config) -> MyResult<()> {
-    //let mut result: Vec<String> = Vec::new();
-    let expected_messege = "no such a file".red().bold().to_string();
-    let content = fs::read_to_string(config.file_path).expect(&expected_messege);
-    for (index_line, line) in content.lines().enumerate() {
-        let is_match = if config.ignore_case {
-            line.to_lowercase().contains(&config.query.to_lowercase())
-        } else {
-            line.contains(&config.query)
-        };
-        if is_match {
-            let line_number = index_line + 1;
-            let formated_line =
-                line.replace(&config.query, &config.query.blue().bold().to_string());
+    let content = fs::read_to_string(&config.file_path)?;
+
+    let results = if config.ignore_case {
+        search_case_insensitive(&config.query, &content)
+    } else {
+        search(&config.query, &content)
+    };
+
+    for (index, line) in content.lines().enumerate() {
+        if results.contains(&line) {
+            let line_number = index + 1;
+            let highlighted = config.query.blue().bold().to_string();
+            let formated_line = line.replace(&config.query, &highlighted);
+
             if config.show_line_number {
                 println!("{}.{}", line_number, formated_line);
             } else {
@@ -48,5 +49,59 @@ pub fn run(config: Config) -> MyResult<()> {
             }
         }
     }
+
     Ok(())
+}
+
+pub fn search<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+    let mut results = Vec::new();
+    for line in content.lines() {
+        if line.contains(query) {
+            results.push(line);
+        }
+    }
+    results
+}
+
+pub fn search_case_insensitive<'a>(query: &str, content: &'a str) -> Vec<&'a str> {
+    let query = query.to_lowercase();
+    let mut results = Vec::new();
+
+    for line in content.lines() {
+        if line.to_lowercase().contains(&query) {
+            results.push(line);
+        }
+    }
+    results
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query = "duct";
+        let content = "\
+Rust:
+safe, fast, productive.
+Pick three.";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, content));
+    }
+
+    #[test]
+    fn case_insensitive() {
+        let query = "rUsT";
+        let content = "\
+Rust:
+safe, fast, productive.
+Pick three.
+Trust me.";
+
+        assert_eq!(
+            vec!["Rust:", "Trust me."],
+            search_case_insensitive(query, content)
+        );
+    }
 }
