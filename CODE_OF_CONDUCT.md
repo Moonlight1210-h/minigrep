@@ -28,3 +28,7 @@ conduct. Reports should be sent to the project maintainers at qwex1210@gmail.com
 ## Attribution
 
 This Code of Conduct is adapted from the Contributor Covenant, version 2.0.
+
+## Contributing
+
+Contributions are welcome! Please make sure to read and follow our [Code of Conduct](CODE_OF_CONDUCT.md) before submitting a pull request.
