@@ -1,6 +1,6 @@
 [package]
 name = "minigrep"
-version = "0.1.2"
+version = "0.2.0"
 edition = "2024"
 authors = ["Moonlight <qwex1210@gmail.com>"]
 description = "A minimal grep-like CLI tool written in Rust."
