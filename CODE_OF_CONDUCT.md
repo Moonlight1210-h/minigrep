@@ -20,15 +20,28 @@ community include:
 - Accepting responsibility and apologizing to those affected by our mistakes
 - Focusing on what is best for the community
 
+Examples of unacceptable behavior include:
+
+- The use of sexualized language or imagery, and unwelcome sexual attention or advances
+- Trolling, insulting or derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information, such as a physical or email address, without explicit permission
+- Other conduct which could reasonably be considered inappropriate in a professional setting
+
 ## Enforcement Responsibilities
 
-Project maintainers are responsible for clarifying and enforcing this code of
-conduct. Reports should be sent to the project maintainers at qwex1210@gmail.com.
+Project maintainers are responsible for clarifying and enforcing our standards of acceptable behavior and will take appropriate and fair corrective action in response to any behavior that they deem inappropriate, threatening, offensive, or harmful.
+
+Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that are not aligned to this Code of Conduct, and will communicate reasons for enforcement decisions when appropriate.
+
+## Enforcement
+
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the project maintainers responsible for enforcement at **qwex1210@gmail.com**. All complaints will be reviewed and investigated promptly and fairly.
+
+All project maintainers are obligated to respect the privacy and security of the reporter of any incident.
 
 ## Attribution
 
-This Code of Conduct is adapted from the Contributor Covenant, version 2.0.
+This Code of Conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org), version 2.0, available at [https://www.contributor-covenant.org/version/2/0/code_of_conduct.html](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html).
 
-## Contributing
-
-Contributions are welcome! Please make sure to read and follow our [Code of Conduct](CODE_OF_CONDUCT.md) before submitting a pull request.
+For answers to common questions about this code of conduct, see the FAQ at [https://www.contributor-covenant.org/faq](https://www.contributor-covenant.org/faq).

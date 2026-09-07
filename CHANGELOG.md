@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-06
+
+### Added
+- Integrated the `regex` crate using `RegexBuilder` to enable flexible pattern matching across files.
+- Case-preserving term highlighting using `RegexBuilder::replace_all` and `Captures`.
+- Native support for case-insensitive searching via the `-i, --ignore-case` flag handled dynamically within `RegexBuilder`.
+- Comprehensive integration testing suite in `tests/cli.rs` leveraging `assert_cmd`, `predicates`, and `tempfile`.
+- Automated release build and installation workflows using `cargo install --path .`.
+
+### Changed
+- Replaced literal string searching with regular expression evaluation in line matching routines.
+- Consolidated search execution logic inside `run()` to reuse a single `Regex` engine instance for both line matching and string highlighting.
+- Refactored `search()` into a pure, functional helper utilizing Rust's `.filter()` and `.collect()` iterators.
+- Updated `Config` struct deriving `clap::Parser` to streamline argument handling.
+
+### Benchmark Insights
+- Baseline CLI benchmarks conducted using `hyperfine` against standard utilities (`grep` and `ripgrep`) identified terminal I/O and whole-file memory allocations as key performance bottlenecks for future optimization milestones.
+
 ## [0.1.2] - 2026-09-03
 
 ### Added
