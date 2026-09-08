@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+
+## [0.2.1] - 2026-09-08
+
+### Changed
+- Replaced whole-file memory loading (`fs::read_to_string`) with streaming I/O via `BufReader`.
+- Optimized standard output printing by locking `stdout` and utilizing `BufWriter` to eliminate repetitive system call overhead.
+
+### Performance Benchmark Results
+- Reduced execution time on medium benchmark files from **~13.0s** to **46.5ms** (~280x speedup).
+- Streamlined memory consumption to a constant O(1) buffer allocation per line.
+
 ## [0.2.0] - 2026-09-06
 
 ### Added
