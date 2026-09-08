@@ -1,4 +1,4 @@
- use clap::Parser;
+use clap::Parser;
 use colored::Colorize;
 use regex::RegexBuilder;
 use std::error::Error;
@@ -32,17 +32,14 @@ pub fn get_args() -> MyResult<Config> {
 pub fn run(config: Config) -> MyResult<()> {
     let content = fs::read_to_string(&config.file_path)?;
 
-    
     let re = RegexBuilder::new(&config.query)
         .case_insensitive(config.ignore_case)
         .build()?;
 
-    
     for (index, line) in content.lines().enumerate() {
         if re.is_match(line) {
             let line_number = index + 1;
 
-            
             let formatted_line = re.replace_all(line, |caps: &regex::Captures| {
                 caps[0].blue().bold().to_string()
             });
