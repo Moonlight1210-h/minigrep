@@ -3,6 +3,7 @@ use colored::Colorize;
 use regex::RegexBuilder;
 use std::error::Error;
 use std::fs;
+use std::io::{BufRead, BufReader, BufWriter, Write};
 
 pub type MyResult<T> = Result<T, Box<dyn Error>>;
 
@@ -30,27 +31,33 @@ pub fn get_args() -> MyResult<Config> {
 }
 
 pub fn run(config: Config) -> MyResult<()> {
-    let content = fs::read_to_string(&config.file_path)?;
-
+    let file = fs::File::open(&config.file_path)?;
+    let reader = BufReader::new(file);
+    //let mut contents = String::new();
+    let stdout = std::io::stdout();
+    let mut handle = BufWriter::new(stdout.lock());
     let re = RegexBuilder::new(&config.query)
         .case_insensitive(config.ignore_case)
         .build()?;
 
-    for (index, line) in content.lines().enumerate() {
-        if re.is_match(line) {
+    for (index, line_result) in reader.lines().enumerate() {
+        let line = line_result?;
+
+        if re.is_match(&line) {
             let line_number = index + 1;
 
-            let formatted_line = re.replace_all(line, |caps: &regex::Captures| {
+            let formatted_line = re.replace_all(&line, |caps: &regex::Captures| {
                 caps[0].blue().bold().to_string()
             });
 
             if config.show_line_number {
-                println!("{}.{}", line_number, formatted_line);
+                writeln!(handle, "{}.{}", line_number, formatted_line)?;
             } else {
-                println!("{}", formatted_line);
+                writeln!(handle, "{}", formatted_line)?;
             }
         }
     }
+    handle.flush()?;
 
     Ok(())
 }
