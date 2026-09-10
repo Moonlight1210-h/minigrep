@@ -3,7 +3,7 @@ use colored::Colorize;
 use regex::RegexBuilder;
 use std::error::Error;
 use std::fs;
-use std::io::{BufRead, BufReader, BufWriter, Write};
+use std::io::{self, BufRead, BufReader, BufWriter, IsTerminal, Write};
 
 pub type MyResult<T> = Result<T, Box<dyn Error>>;
 
@@ -26,39 +26,50 @@ pub struct Config {
     pub show_line_number: bool,
 }
 
-pub fn get_args() -> MyResult<Config> {
-    Ok(Config::parse())
-}
-
 pub fn run(config: Config) -> MyResult<()> {
     let file = fs::File::open(&config.file_path)?;
     let reader = BufReader::new(file);
-    //let mut contents = String::new();
-    let stdout = std::io::stdout();
+
+    let stdout = io::stdout();
     let mut handle = BufWriter::new(stdout.lock());
+
+    // فحص ما إذا كان المخرج تفاعلياً (TTY) أم لا
+    let is_tty = stdout.is_terminal();
+
     let re = RegexBuilder::new(&config.query)
         .case_insensitive(config.ignore_case)
         .build()?;
 
-    for (index, line_result) in reader.lines().enumerate() {
-        let line = line_result?;
-
-        if re.is_match(&line) {
-            let line_number = index + 1;
-
-            let formatted_line = re.replace_all(&line, |caps: &regex::Captures| {
-                caps[0].blue().bold().to_string()
-            });
+    reader
+        .lines()
+        .enumerate()
+        .filter_map(|(index, line_result)| {
+            let line = line_result.ok()?;
+            if re.is_match(&line) {
+                Some((index + 1, line))
+            } else {
+                None
+            }
+        })
+        .try_for_each(|(line_number, line)| -> io::Result<()> {
+            // التلوين فقط إذا كان المخرج TTY
+            let output_line = if is_tty {
+                re.replace_all(&line, |caps: &regex::Captures| {
+                    caps[0].blue().bold().to_string()
+                })
+                .to_string()
+            } else {
+                line // طباعة النص الأصلي دون أي تعديل أو استهلاك أداء
+            };
 
             if config.show_line_number {
-                writeln!(handle, "{}.{}", line_number, formatted_line)?;
+                writeln!(handle, "{}.{}", line_number, output_line)
             } else {
-                writeln!(handle, "{}", formatted_line)?;
+                writeln!(handle, "{}", output_line)
             }
-        }
-    }
-    handle.flush()?;
+        })?;
 
+    handle.flush()?;
     Ok(())
 }
 
