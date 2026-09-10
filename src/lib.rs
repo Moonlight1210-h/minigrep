@@ -26,6 +26,9 @@ pub struct Config {
     pub show_line_number: bool,
 }
 
+pub fn get_args() -> MyResult<Config> {
+    Ok(Config::parse())
+}
 pub fn run(config: Config) -> MyResult<()> {
     let file = fs::File::open(&config.file_path)?;
     let reader = BufReader::new(file);
